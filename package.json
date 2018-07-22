@@ -1,0 +1,85 @@
+{
+    "name": "rf-online-launcher",
+    "productName": "RF-Oswald",
+    "version": "1.0.0",
+    "description": "RF-Online Launcher",
+    "main": "src/index.js",
+    "scripts": {
+      "start": "electron-forge start",
+      "package": "electron-forge package --arch=ia32",
+      "make": "electron-forge make",
+      "publish": "electron-forge publish",
+      "lint": "eslint src --color"
+    },
+    "keywords": [],
+    "author": "mivlf",
+    "license": "MIT",
+    "config": {
+      "forge": {
+        "make_targets": {
+          "win32": [
+            "squirrel",
+            "zip"
+          ]
+        },
+        "electronPackagerConfig": {
+          "asar": true,
+          "packageManager": "npm",
+          "icon": "icon1.ico",
+          "arch": "ia32"
+        },
+        "electronWinstallerConfig": {
+          "name": "Launcher"
+        },
+        "github_repository": {
+          "owner": "",
+          "name": ""
+        }
+      }
+    },
+    "dependencies": {
+        "@shoutem/animation": "^0.12.2",
+        "async": "^2.6.0",
+        "axios": "^0.18.0",
+        "bluebird": "^3.5.1",
+        "bootstrap": "^4.1.1",
+        "classnames": "^2.2.5",
+        "electron-compile": "^6.4.2",
+        "electron-squirrel-startup": "^1.0.0",
+        "extract-zip": "^1.6.7",
+        "font-awesome": "^4.7.0",
+        "lodash": "^4.17.4",
+        "md5": "^2.2.1",
+        "md5-file": "^4.0.0",
+        "moment": "^2.19.3",
+        "node-stream-zip": "^1.7.0",
+        "popmotion-pose": "^2.1.0",
+        "randomstring": "^1.1.5",
+        "react": "^16.2.0",
+        "react-animations": "^1.0.0",
+        "react-custom-scrollbars": "^4.2.1",
+        "react-dom": "^16.2.0",
+        "react-notify-toast": "^0.4.0",
+        "react-pose": "^2.2.0",
+        "react-redux": "^5.0.6",
+        "recursive-readdir": "^2.2.2",
+        "redux": "^3.7.2",
+        "redux-form": "^7.2.0",
+        "request": "^2.83.0",
+        "socket.io-client": "^2.0.4",
+        "styled-components": "^3.3.3"
+    },
+    "devDependencies": {
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-react": "^6.24.1",
+        "babel-preset-stage-0": "^6.24.1",
+        "electron-forge": "^4.1.6",
+        "electron-prebuilt-compile": "1.7.9",
+        "eslint": "^3.19.0",
+        "eslint-config-airbnb": "^15.1.0",
+        "eslint-plugin-import": "^2.8.0",
+        "eslint-plugin-jsx-a11y": "^5.1.1",
+        "eslint-plugin-react": "^7.5.1"
+    }
+}

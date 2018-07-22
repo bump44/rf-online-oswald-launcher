@@ -1,0 +1,64 @@
+@import '../../../node_modules/font-awesome/css/font-awesome.css';
+@import '../../../node_modules/bootstrap/dist/css/bootstrap.css';
+@import './fonts.scss';
+
+body {
+	background : #fff url(../img/bg.jpg) no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	background-position: 0 10px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  overflow: hidden;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+html, body, #appMount {
+  height: 100%;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #fff;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(255,255,255,0.4);
+}
+
+.text-orange {
+  color: orange;
+}
+
+.text-muted {
+  color: #ddd;
+}
+
+.text-red {
+  color: #f13a3a;
+}
+
+.text-gold {
+  color: goldenrod;
+}
+
+.mb15 {
+  margin-bottom: 15px;
+}
+
+.pt15 {
+  padding-top: 15px;
+}
