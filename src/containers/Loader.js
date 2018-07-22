@@ -489,7 +489,7 @@ class Loader extends React.Component {
   }
 
   checkAndUpdateProgram() {
-    const { app, autoUpdater } = remote;
+    const { app, autoUpdater, dialog } = remote;
     const feedUrl = `${PROGRAM_UPDATE_SERVICE_URL}/update/${process.platform}/${app.getVersion()}`;
 
     this.changeStateMessage(`Проверяем обновления для лаунчера ${app.getVersion()}...`);
