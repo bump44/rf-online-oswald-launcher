@@ -1,6 +1,9 @@
 import { GAME_CLIENT_UPDATE_SERVER_URL, SOCKET_CONNECTION_URL, PROGRAM_UPDATE_SERVICE_URL } from '../config';
+import packagejson from '../../package.json';
 
 export { GAME_CLIENT_UPDATE_SERVER_URL, SOCKET_CONNECTION_URL, PROGRAM_UPDATE_SERVICE_URL };
+export const APP_DATA_HOME_PATH = packagejson.productName || '__rf_online__';
+
 export const GAME_CLIENT_PACKAGE_PATH = 'game_client/package';
 export const GAME_CLIENT_PACKAGE_NAME = 'game_client.zip';
 export const GAME_CLIENT_EXTRACTED_PATH = 'game_client/extracted';
