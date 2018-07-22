@@ -1,5 +1,6 @@
 import React from 'react';
 import Promise from 'bluebird';
+import log from 'electron-log';
 import { remote } from 'electron';
 import axios from 'axios';
 import queue from 'async/queue';
@@ -173,6 +174,8 @@ class Loader extends React.Component {
   }
 
   componentWillMount() {
+    log.info('Initialize loaders...');
+
     this.execStartupCheckers();
     this.socketClient = new SocketClient(SOCKET_CONNECTION_URL, { jwt: this.state.user.jwt });
     this.socketClient.setStateHandler(this.handleStateSocket);
@@ -269,6 +272,7 @@ class Loader extends React.Component {
 
   onClickLaunchUserAccount(account) {
     const key = account.id;
+    log.info(`Launching account ${key}`)
 
     queueWorkers.push({
       defaultSet: [0x00],
@@ -280,6 +284,7 @@ class Loader extends React.Component {
       if (err) {
         this.changeStateLaunchWorker(key, { queue: false, running: false, execution: false });
         console.error(err);
+        log.error(`Failed launch account ${key}`);
         return;
       }
     });
@@ -491,6 +496,8 @@ class Loader extends React.Component {
   checkAndUpdateProgram() {
     const { app, autoUpdater, dialog } = remote;
     const feedUrl = `${PROGRAM_UPDATE_SERVICE_URL}/update/${process.platform}/${app.getVersion()}`;
+    console.log(feedUrl);
+    log.info(`Setup autoUpdater, feed: ${feedUrl}`)
 
     this.changeStateMessage(`Проверяем обновления для лаунчера ${app.getVersion()}...`);
     autoUpdater.setFeedURL(feedUrl);
@@ -509,10 +516,12 @@ class Loader extends React.Component {
           if (response === 0) autoUpdater.quitAndInstall();
         });
       });
+      autoUpdater.on('error', (err) => log.error('Failed check updates', err));
       setInterval(() => autoUpdater.checkForUpdates(), 5 * 60 * 1000);
       return Promise.resolve();
     } catch (err) {
       console.error(err);
+      log.error('Failed setup autoUpdater', err);
       return Promise.resolve();
     }
   }

@@ -28,7 +28,7 @@
         "ignore": "^/(.vscode|common|out|temporary)"
       },
       "electronWinstallerConfig": {
-        "name": "Launcher"
+        "name": "RF_Oswald"
       },
       "github_repository": {
         "owner": "Omashu",
@@ -43,6 +43,7 @@
     "bootstrap": "^4.1.2",
     "classnames": "^2.2.6",
     "electron-compile": "^6.4.3",
+    "electron-log": "^2.2.16",
     "electron-squirrel-startup": "^1.0.0",
     "extract-zip": "^1.6.7",
     "font-awesome": "^4.7.0",
