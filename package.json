@@ -7,12 +7,11 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package --arch=ia32",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "make": "electron-forge make --arch=ia32",
     "lint": "eslint src --color"
   },
   "keywords": [],
-  "author": "mivlf",
+  "author": "Ilya Gerasimov",
   "license": "MIT",
   "config": {
     "forge": {
@@ -25,8 +24,7 @@
       "electronPackagerConfig": {
         "asar": true,
         "packageManager": "npm",
-        "icon": "icon1.ico",
-        "arch": "ia32",
+        "icon": "icon.ico",
         "ignore": "^/(.vscode|common|out|temporary)"
       },
       "electronWinstallerConfig": {
@@ -39,38 +37,38 @@
     }
   },
   "dependencies": {
-    "async": "^2.6.0",
+    "async": "^2.6.1",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
-    "bootstrap": "^4.1.1",
-    "classnames": "^2.2.5",
-    "electron-compile": "^6.4.2",
+    "bootstrap": "^4.1.2",
+    "classnames": "^2.2.6",
+    "electron-compile": "^6.4.3",
     "electron-squirrel-startup": "^1.0.0",
     "extract-zip": "^1.6.7",
     "font-awesome": "^4.7.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.10",
     "md5": "^2.2.1",
     "md5-file": "^4.0.0",
-    "moment": "^2.19.3",
-    "react": "^16.2.0",
+    "moment": "^2.22.2",
+    "react": "^16.4.1",
     "react-custom-scrollbars": "^4.2.1",
-    "react-dom": "^16.2.0",
+    "react-dom": "^16.4.1",
     "recursive-readdir": "^2.2.2",
-    "request": "^2.83.0",
-    "socket.io-client": "^2.0.4",
+    "request": "^2.87.0",
+    "socket.io-client": "^2.1.1",
     "styled-components": "^3.3.3"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "electron-forge": "^4.1.6",
-    "electron-prebuilt-compile": "1.7.9",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.5.1"
+    "electron-forge": "^5.2.2",
+    "electron-prebuilt-compile": "2.0.4",
+    "eslint": "^5.2.0",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0"
   }
 }
