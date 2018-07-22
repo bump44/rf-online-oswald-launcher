@@ -202,8 +202,7 @@ class Loader extends React.Component {
   }
 
   handleSocketEventServerLoginHaveNewState(state = {}) {
-    // TODO: test variable
-    this.changeStateServerLogin({ ...state, bConnected: true });
+    this.changeStateServerLogin({ ...state/* , bConnected: true */ });
   }
 
   handleSocketEventUserAccountUpdated(obj) {
@@ -496,7 +495,7 @@ class Loader extends React.Component {
   checkAndUpdateProgram() {
     const { app, autoUpdater, dialog } = remote;
     const feedUrl = `${PROGRAM_UPDATE_SERVICE_URL}/update/${process.platform}/${app.getVersion()}`;
-    console.log(feedUrl);
+
     log.info(`Setup autoUpdater, feed: ${feedUrl}`)
 
     this.changeStateMessage(`Проверяем обновления для лаунчера ${app.getVersion()}...`);
