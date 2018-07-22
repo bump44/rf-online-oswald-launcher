@@ -42,6 +42,7 @@
     "bluebird": "^3.5.1",
     "bootstrap": "^4.1.2",
     "classnames": "^2.2.6",
+    "dotenv": "^6.0.0",
     "electron-compile": "^6.4.3",
     "electron-squirrel-startup": "^1.0.0",
     "extract-zip": "^1.6.7",
@@ -64,7 +65,6 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "dotenv": "^6.0.0",
     "electron-forge": "^5.2.2",
     "electron-prebuilt-compile": "2.0.4"
   }
