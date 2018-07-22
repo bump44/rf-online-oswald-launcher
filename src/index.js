@@ -1,10 +1,7 @@
-import dotenv from 'dotenv';
 import { app, BrowserWindow } from 'electron';
+import dotenv from 'dotenv';
 
-// Configure env
 dotenv.config();
-
-console.log(process.env);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require

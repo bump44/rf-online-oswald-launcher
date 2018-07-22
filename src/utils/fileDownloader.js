@@ -19,10 +19,15 @@ class FileDownloader {
       this.writeFilePath = temporaryFilePath();
       this.writeStream = createWriteStream(this.writeFilePath);
 
-      this.request = request({
-        method: 'get',
-        uri: this.url,
-      });
+      try {
+        this.request = request({
+          method: 'get',
+          uri: this.url,
+        });
+      } catch (err) {
+        return reject(err);
+      }
+
       this.request.pipe(this.writeStream);
       this.request.on('error', (err) => reject(err));
       this.request.on('response', (response) => {
