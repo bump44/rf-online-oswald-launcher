@@ -233,9 +233,10 @@ class Loader extends React.Component {
   }
 
   handleSocketEventUr(obj) {
-    this.changeStateUser({ obj, accounts: [] });
+    this.changeStateUser({ obj });
+
     // load user accounts
-    this.changeStateUserAccounts({ isLoading: true, isError: false, accounts: [] });
+    this.changeStateUserAccounts({ isLoading: !!obj, isError: false, accounts: [] });
 
     if (!obj) {
       return;
