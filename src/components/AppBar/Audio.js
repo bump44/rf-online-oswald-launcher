@@ -42,7 +42,7 @@ export default class AppBarAudio extends React.Component {
         return null;
       }
 
-      return this.setState({ track: getByIndex(0) });
+      return this.setState({ track: this.getByIndex(0) });
     }
 
     const nextIndex = this.state.track.index + 1;
@@ -59,13 +59,13 @@ export default class AppBarAudio extends React.Component {
         return null;
       }
 
-      return this.setState({ track: getByIndex(trackList.length - 1) });
+      return this.setState({ track: this.getByIndex(trackList.length - 1) });
     }
 
 		const prevIndex = this.state.track.index - 1;
 
 		if (prevIndex < 0 || !this.getByIndex(prevIndex)) {
-      return this.setState({ track: this.getByIndex(prevIndex) });
+      return this.setState({ track: this.getByIndex(trackList.length - 1) });
     } else {
       return this.setState({ track: this.getByIndex(prevIndex) });
     }
