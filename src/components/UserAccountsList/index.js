@@ -12,6 +12,7 @@ export default class UserAccountsList extends React.Component {
     accounts: PropTypes.array,
     launchState: PropTypes.object,
     onSelect: PropTypes.func,
+    selected: PropTypes.number,
   };
 
   constructor(props) {
@@ -94,6 +95,7 @@ export default class UserAccountsList extends React.Component {
               <AccountGroup
                 key={account.id}
                 onClick={this.onClick.bind(null, account, account.__index !== undefined ? account.__index : index)}
+                selected={this.props.selected === index}
               >
                 <AccountName
                   className={cx({

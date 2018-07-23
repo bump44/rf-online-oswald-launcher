@@ -61,6 +61,7 @@ export default class Screen extends React.PureComponent {
                   <UserAccountsList
                     accounts={this.props.userAccountsState.accounts}
                     onSelect={this.props.onSelectUserAccount}
+                    selected={this.props.userAccountsState.selected}
                     launchState={this.props.launchState}
                   />
                 )}

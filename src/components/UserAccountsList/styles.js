@@ -16,9 +16,15 @@ export const AccountGroup = styled.div`
   border-bottom: 1px solid #232323;
   position: relative;
   cursor: pointer;
+  transition: all .1s ease-in-out;
+
   &:hover {
     background-color: #232323;
   }
+
+  ${(props) => (props.selected) && (`
+    background-color: #232323;
+  `)}
 `;
 
 export const AccountName = styled.div`
