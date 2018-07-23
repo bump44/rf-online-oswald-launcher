@@ -1,6 +1,5 @@
 import extractZip from 'extract-zip';
 import Promise from 'bluebird';
-import path from 'path';
 import { temporaryRandomPath } from './path';
 import { rmdir, mkdir, rename, stat } from './fs';
 
@@ -65,10 +64,3 @@ export async function extract(filePath, tickHandler) {
     });
   });
 }
-
-export const moveExtractedFiles = (entries, newPath) =>
-  Promise.mapSeries(entries, (entry) => rename(entry.path, path.resolve(newPath, entry.keyName))
-    .then((newEntryKeyPath) => ({
-      ...entry,
-      path: newEntryKeyPath,
-    })));
