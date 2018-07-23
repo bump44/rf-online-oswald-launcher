@@ -64,7 +64,7 @@ export default class Screen extends React.PureComponent {
                     launchState={this.props.launchState}
                   />
                 )}
-                {!this.props.userAccountsState.isLoading && (
+                {!this.props.userAccountsState.isLoading && this.props.userAccountsState.accounts.length < 70 && (
                   <UserAccountCreateForm
                     onSubmit={this.props.onSubmitUserAccountCreate}
                     isLoading={this.props.userAccountCreateState.isLoading}
