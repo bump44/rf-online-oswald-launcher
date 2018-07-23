@@ -97,7 +97,7 @@ class Loader extends React.Component {
     };
 
     try {
-      lsStateUser = Object.assign({}, lsStateUser, JSON.parse(window.localStorage.getItem(LS_STATE_USER, lsStateUser)) || lsStateUser);
+      lsStateUser = Object.assign({}, lsStateUser, JSON.parse(window.localStorage.getItem(LS_STATE_USER)) || lsStateUser);
     } catch (err) {
       console.error(err);
     }
