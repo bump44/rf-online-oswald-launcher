@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { remote } from 'electron';
 import AppBarWrapper, { Brand, ConnectionState, ButtonClose, ServerLoginIndicator, ServerLoginMessage } from './styles';
 import Audio from './Audio';
 
@@ -27,6 +28,11 @@ export default class AppBar extends React.PureComponent {
     socketState: { connected: false, connecting: false, isError: false, errorMessage: '' },
   };
 
+  constructor(props) {
+    super(props);
+    this.onClickQuit = () => remote.getCurrentWindow().close();
+  }
+
   render() {
     const { brand, socketState, userState, serverLoginState } = this.props;
 
@@ -43,7 +49,7 @@ export default class AppBar extends React.PureComponent {
           {...socketState}
         />
         <Audio play={userState.audioPlayOnStart} onChangePlayOnStart={this.props.onChangeAudioPlayOnStart} />
-        <ButtonClose>x</ButtonClose>
+        <ButtonClose onClick={this.onClickQuit}>x</ButtonClose>
       </AppBarWrapper>
     );
   }
