@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { compact } from 'lodash';
 import ScreenWrapper, { Overlay, Aside, Content, HintMessage, ButtonLogout } from './styles';
 
 import LoginForm from '../LoginForm';
@@ -8,6 +7,7 @@ import TokenActivationForm from '../TokenActivationForm';
 import UserAccountCreateForm from '../UserAccountCreateForm';
 import UserAccountsList from '../UserAccountsList';
 import UserAccountCard from '../UserAccountCard';
+import OnlineStatus from '../OnlineStatus';
 
 export default class Screen extends React.PureComponent {
   static propTypes = {
@@ -30,6 +30,7 @@ export default class Screen extends React.PureComponent {
       bConnection: PropTypes.bool,
       lastECode: PropTypes.string,
     }),
+    serverDisplayState: PropTypes.object,
   };
 
   constructor(props) {
@@ -94,6 +95,9 @@ export default class Screen extends React.PureComponent {
             )}
           </Aside>
           <Content>
+            <OnlineStatus
+              serverDisplayState={this.props.serverDisplayState}
+            />
             {this.props.userAccountsState.accounts[this.props.userAccountsState.selected] !== undefined && (
               <UserAccountCard
                 account={this.props.userAccountsState.accounts[this.props.userAccountsState.selected]}

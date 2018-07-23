@@ -24,6 +24,7 @@ export const SOCKET_LISTEN_UR = 'ur';
 export const SOCKET_LISTEN_USER_ACCOUNTS_CREATED = 'userAccounts_created';
 export const SOCKET_LISTEN_USER_ACCOUNTS_UPDATED = 'userAccounts_updated';
 export const SOCKET_LISTEN_SERVER_LOGIN__HAVE_NEW_STATE = 'serverLogin__haveNewState';
+export const SOCKET_LISTEN_SERVER_DISPLAY__HAVE_NEW_STATE = 'serverDisplay__haveNewState';
 
 export const LS_STATE_USER = '__state_user__';
 

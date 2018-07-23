@@ -21,7 +21,7 @@ import { getGameClientPackageUrl, getGameClientFileUrl } from '../utils/url';
 import { mkdir, rmdir, unlink } from '../utils/fs';
 import { gameClientPath, gameClientPackagePath, gameClientExtractedPath, temporaryPath, gameClientPackageFilePath, gameClientExtractedHashMapFilePath, gameClientExtractedDefaultSetFilePath, gameClientExtractedRfOnlineBinFilePath } from '../utils/path';
 import { extract } from '../utils/zip';
-import { GAME_CLIENT_DOWNLOAD_HASH_MAP_URL, GAME_CLIENT_VERSION_URL, SOCKET_CONNECTION_URL, SOCKET_ACTION_API_GET_TOKEN, LS_STATE_USER, SOCKET_ACTION_API_USER_ACCOUNTS_INDEX_BY_USER_ID, SOCKET_ACTION_API_USER_ACCOUNTS_CREATE, SOCKET_LISTEN_UR, SOCKET_LISTEN_USER_ACCOUNTS_CREATED, SOCKET_LISTEN_USER_ACCOUNTS_UPDATED, SOCKET_LISTEN_SERVER_LOGIN__HAVE_NEW_STATE, SOCKET_ACTION_API_ACTIVATE_TOKEN, PROGRAM_UPDATE_SERVICE_URL, ACCOUNT_URL, FORUM_URL, SOCKET_ACTION_API_CREATE_SESSION } from '../utils/constants';
+import { GAME_CLIENT_DOWNLOAD_HASH_MAP_URL, GAME_CLIENT_VERSION_URL, SOCKET_CONNECTION_URL, SOCKET_ACTION_API_GET_TOKEN, LS_STATE_USER, SOCKET_ACTION_API_USER_ACCOUNTS_INDEX_BY_USER_ID, SOCKET_ACTION_API_USER_ACCOUNTS_CREATE, SOCKET_LISTEN_UR, SOCKET_LISTEN_USER_ACCOUNTS_CREATED, SOCKET_LISTEN_USER_ACCOUNTS_UPDATED, SOCKET_LISTEN_SERVER_LOGIN__HAVE_NEW_STATE, SOCKET_ACTION_API_ACTIVATE_TOKEN, PROGRAM_UPDATE_SERVICE_URL, ACCOUNT_URL, FORUM_URL, SOCKET_ACTION_API_CREATE_SESSION, SOCKET_LISTEN_SERVER_DISPLAY__HAVE_NEW_STATE } from '../utils/constants';
 import SocketClient from '../utils/socketClient';
 
 const queueWorkers = queue((task, cb) => setImmediate(() => {
@@ -57,6 +57,7 @@ class Loader extends React.Component {
     this.handleSocketEventUserAccountCreated = this.handleSocketEventUserAccountCreated.bind(this);
     this.handleSocketEventUserAccountUpdated = this.handleSocketEventUserAccountUpdated.bind(this);
     this.handleSocketEventServerLoginHaveNewState = this.handleSocketEventServerLoginHaveNewState.bind(this);
+    this.handleSocketEventServerDisplayHaveNewState = this.handleSocketEventServerDisplayHaveNewState.bind(this);
 
     this.execStartupCheckers = this.execStartupCheckers.bind(this);
     this.checkAndUpdateGameClient = this.checkAndUpdateGameClient.bind(this);
@@ -72,6 +73,7 @@ class Loader extends React.Component {
     this.createPaths = this.createPaths.bind(this);
     this.getProgressProps = this.getProgressProps.bind(this);
 
+    this.changeStateServerDisplay = this.changeStateServerDisplay.bind(this);
     this.changeStateServerLogin = this.changeStateServerLogin.bind(this);
     this.changeStateSocket = this.changeStateSocket.bind(this);
     this.changeStateGameClient = this.changeStateGameClient.bind(this);
@@ -129,6 +131,7 @@ class Loader extends React.Component {
         pages: [],
       },
       serverLogin: { bConnected: false, bConnection: false, lastECode: null },
+      serverDisplay: { map: {}, user: { a: 0, b: 0, c: 0, total: 0 } },
       launch: {
         /**
          * { key: userAccountId
@@ -210,6 +213,11 @@ class Loader extends React.Component {
     });
   }
 
+  handleSocketEventServerDisplayHaveNewState(state = {}) {
+    console.log(state);
+    this.changeStateServerDisplay({ ...state });
+  }
+
   handleSocketEventServerLoginHaveNewState(state = {}) {
     this.changeStateServerLogin({ ...state/* , bConnected: true */ });
   }
@@ -266,7 +274,8 @@ class Loader extends React.Component {
     this.socketClient.io.on(SOCKET_LISTEN_UR, this.handleSocketEventUr);
     this.socketClient.io.on(SOCKET_LISTEN_USER_ACCOUNTS_CREATED, this.handleSocketEventUserAccountCreated);
     this.socketClient.io.on(SOCKET_LISTEN_USER_ACCOUNTS_UPDATED, this.handleSocketEventUserAccountUpdated);
-    this.socketClient.io.on(SOCKET_LISTEN_SERVER_LOGIN__HAVE_NEW_STATE, this.handleSocketEventServerLoginHaveNewState)
+    this.socketClient.io.on(SOCKET_LISTEN_SERVER_LOGIN__HAVE_NEW_STATE, this.handleSocketEventServerLoginHaveNewState);
+    this.socketClient.io.on(SOCKET_LISTEN_SERVER_DISPLAY__HAVE_NEW_STATE, this.handleSocketEventServerDisplayHaveNewState)
   }
 
   onClickLaunchKillUserAccount(account) {
@@ -422,6 +431,23 @@ class Loader extends React.Component {
             ...(prevState.launch.workers[key] || {}),
             ...nextState,
           },
+        },
+      },
+    }));
+  }
+
+  changeStateServerDisplay(nextState = {}) {
+    this.setState((prevState) => ({
+      ...prevState,
+      serverDisplay: {
+        ...prevState.serverDisplay,
+        map: {
+          ...prevState.map,
+          ...(nextState.map || {}),
+        },
+        user: {
+          ...prevState.user,
+          ...Object.assign({}, { a: 0, b: 0, c: 0, total: 0 }, nextState.user || {}),
         },
       },
     }));
@@ -846,6 +872,7 @@ class Loader extends React.Component {
           userAccountsState={this.state.userAccounts}
           userAccountCreateState={this.state.userAccountCreate}
           serverLoginState={this.state.serverLogin}
+          serverDisplayState={this.state.serverDisplay}
           launchState={this.state.launch}
         />
       );

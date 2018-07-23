@@ -12,7 +12,7 @@
 }
 
 body {
-	background : #fff url(../img/bg.jpg) no-repeat;
+	background: #fff url(../img/bg.jpg) no-repeat;
 	background-attachment: fixed;
 	background-size: cover;
 	background-position: 0 10px;
@@ -70,4 +70,16 @@ html, body, #appMount {
 
 .pt15 {
   padding-top: 15px;
+}
+
+.accretia_icon {
+  background: #fff url(../img/accretia_icon.png) no-repeat;
+}
+
+.bellato_icon {
+  background: #fff url(../img/bellato_icon.png) no-repeat;
+}
+
+.cora_icon {
+  background: #fff url(../img/cora_icon.jpg) no-repeat;
 }
