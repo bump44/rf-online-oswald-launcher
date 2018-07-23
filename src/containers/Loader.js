@@ -59,8 +59,8 @@ class Loader extends React.Component {
     this.handleSocketEventServerLoginHaveNewState = this.handleSocketEventServerLoginHaveNewState.bind(this);
 
     this.execStartupCheckers = this.execStartupCheckers.bind(this);
-    this.checkAndUpdateProgram = this.checkAndUpdateProgram.bind(this);
     this.checkAndUpdateGameClient = this.checkAndUpdateGameClient.bind(this);
+    this.configureAutoUpdater = this.configureAutoUpdater.bind(this);
 
     this.buildGameClientHashMap = this.buildGameClientHashMap.bind(this);
     this.checkExistsGameClientHashMap = this.checkExistsGameClientHashMap.bind(this);
@@ -161,6 +161,7 @@ class Loader extends React.Component {
         brand: packagejson.productName,
         accountUrl: ACCOUNT_URL,
         forumUrl: FORUM_URL,
+        version: remote.app.getVersion(),
       },
       gameClient: {
         packageDownloaded: false, // game client package is exists?
@@ -182,7 +183,9 @@ class Loader extends React.Component {
   componentWillMount() {
     log.info('Initialize loaders...');
 
+    this.configureAutoUpdater();
     this.execStartupCheckers();
+
     this.socketClient = new SocketClient(SOCKET_CONNECTION_URL, { jwt: this.state.user.jwt });
     this.socketClient.setStateHandler(this.handleStateSocket);
     this.connectToSocketServer();
@@ -499,7 +502,6 @@ class Loader extends React.Component {
 
     return Promise.delay(300)
       .then(() => this.createPaths())
-      .then(() => this.checkAndUpdateProgram())
       .then(() => this.checkAndUpdateGameClient())
       .then(() => this.setState({ isLoading: false }))
       .catch((err) => this.changeStateToError(err.message));
@@ -519,13 +521,11 @@ class Loader extends React.Component {
       });
   }
 
-  checkAndUpdateProgram() {
+  configureAutoUpdater() {
     const { app, autoUpdater, dialog } = remote;
     const feedUrl = `${PROGRAM_UPDATE_SERVICE_URL}/update/${process.platform}/${app.getVersion()}`;
+    log.info(`Setup autoUpdater, feed: ${feedUrl}`);
 
-    log.info(`Setup autoUpdater, feed: ${feedUrl}`)
-
-    this.changeStateMessage(`Проверяем обновления для лаунчера ${app.getVersion()}...`);
     autoUpdater.setFeedURL(feedUrl);
 
     try {
@@ -543,7 +543,7 @@ class Loader extends React.Component {
         });
       });
       autoUpdater.on('error', (err) => log.error('Failed check updates', err));
-      setInterval(() => autoUpdater.checkForUpdates(), 5 * 60 * 1000);
+      setInterval(() => autoUpdater.checkForUpdates(), 15 * 60 * 1000);
       return Promise.resolve();
     } catch (err) {
       console.error(err);
