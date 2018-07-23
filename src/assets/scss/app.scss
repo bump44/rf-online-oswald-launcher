@@ -1,6 +1,15 @@
 @import '../../../node_modules/font-awesome/css/font-awesome.css';
 @import '../../../node_modules/bootstrap/dist/css/bootstrap.css';
+@import '../../../node_modules/notie/dist/notie.min.css';
 @import './fonts.scss';
+
+.notie-textbox {
+  padding: 7px 0 !important;
+  z-index: 3 !important;
+  font-size: 12px;
+  font-family: Verdana, sans-serif;
+  -webkit-app-region: no-drag;
+}
 
 body {
 	background : #fff url(../img/bg.jpg) no-repeat;

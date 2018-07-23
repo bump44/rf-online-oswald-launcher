@@ -18,6 +18,7 @@ export const SOCKET_ACTION_API_GET_TOKEN = 'api_getToken';
 export const SOCKET_ACTION_API_ACTIVATE_TOKEN = 'api_activateToken';
 export const SOCKET_ACTION_API_USER_ACCOUNTS_INDEX_BY_USER_ID = 'api_userAccounts_indexByUserId';
 export const SOCKET_ACTION_API_USER_ACCOUNTS_CREATE = 'api_userAccounts_create';
+export const SOCKET_ACTION_API_CREATE_SESSION = 'api_createSession';
 
 export const SOCKET_LISTEN_UR = 'ur';
 export const SOCKET_LISTEN_USER_ACCOUNTS_CREATED = 'userAccounts_created';
