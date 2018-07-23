@@ -1,11 +1,14 @@
 import React from 'react';
 import Promise from 'bluebird';
 import log from 'electron-log';
-import { remote } from 'electron';
 import axios from 'axios';
 import queue from 'async/queue';
+import { remote } from 'electron';
 import { trim, throttle, get } from 'lodash';
 import { execFile } from 'child_process';
+
+import packagejson from '../../package.json';
+
 import AppBar from '../components/AppBar';
 import LoaderStyle from '../components/Loader';
 import ScreenStyle from '../components/Screen';
@@ -17,7 +20,7 @@ import { getGameClientPackageUrl, getGameClientFileUrl } from '../utils/url';
 import { mkdir, rmdir, unlink } from '../utils/fs';
 import { gameClientPath, gameClientPackagePath, gameClientExtractedPath, temporaryPath, gameClientPackageFilePath, gameClientExtractedHashMapFilePath, gameClientExtractedDefaultSetFilePath, gameClientExtractedRfOnlineBinFilePath } from '../utils/path';
 import { extract } from '../utils/zip';
-import { GAME_CLIENT_DOWNLOAD_HASH_MAP_URL, GAME_CLIENT_VERSION_URL, SOCKET_CONNECTION_URL, SOCKET_ACTION_API_GET_TOKEN, LS_STATE_USER, SOCKET_ACTION_API_USER_ACCOUNTS_INDEX_BY_USER_ID, SOCKET_ACTION_API_USER_ACCOUNTS_CREATE, SOCKET_LISTEN_UR, SOCKET_LISTEN_USER_ACCOUNTS_CREATED, SOCKET_LISTEN_USER_ACCOUNTS_UPDATED, SOCKET_LISTEN_SERVER_LOGIN__HAVE_NEW_STATE, SOCKET_ACTION_API_ACTIVATE_TOKEN, PROGRAM_UPDATE_SERVICE_URL } from '../utils/constants';
+import { GAME_CLIENT_DOWNLOAD_HASH_MAP_URL, GAME_CLIENT_VERSION_URL, SOCKET_CONNECTION_URL, SOCKET_ACTION_API_GET_TOKEN, LS_STATE_USER, SOCKET_ACTION_API_USER_ACCOUNTS_INDEX_BY_USER_ID, SOCKET_ACTION_API_USER_ACCOUNTS_CREATE, SOCKET_LISTEN_UR, SOCKET_LISTEN_USER_ACCOUNTS_CREATED, SOCKET_LISTEN_USER_ACCOUNTS_UPDATED, SOCKET_LISTEN_SERVER_LOGIN__HAVE_NEW_STATE, SOCKET_ACTION_API_ACTIVATE_TOKEN, PROGRAM_UPDATE_SERVICE_URL, ACCOUNT_URL, FORUM_URL } from '../utils/constants';
 import SocketClient from '../utils/socketClient';
 
 const queueWorkers = queue((task, cb) => setImmediate(() => {
@@ -144,6 +147,7 @@ class Loader extends React.Component {
         errorMessage: '',
         payload: {},
         response: null,
+        activationResponse: null,
       },
       socket: {
         isConnected: false,
@@ -153,9 +157,9 @@ class Loader extends React.Component {
       isError: false,
       message: '',
       programSettings: {
-        brand: 'RF-Oswald',
-        accountUrl: 'https://rf-oswald.ru',
-        forumUrl: 'https://forum.rf-oswald.ru',
+        brand: packagejson.productName,
+        accountUrl: ACCOUNT_URL,
+        forumUrl: FORUM_URL,
       },
       gameClient: {
         packageDownloaded: false, // game client package is exists?
