@@ -132,6 +132,7 @@ class Loader extends React.Component {
          *    account: object,
          *    running: bool,
          *    execution: bool,
+         *    pid: number,
          * }
          */
         workers: {},
