@@ -134,7 +134,7 @@ export default class UserAccountCard extends React.PureComponent {
               <AccountMetadataTitle>Дата подключения и отключения:</AccountMetadataTitle>&nbsp;
               <AccountMetadataValue>
                 c {moment(account.premiumFrom).format('LLL')} по {moment(account.premiumTo).format('LLL')}
-                &nbsp;осталось: <b>{moment(account.premiumTo).diff(moment(account.premiumFrom), 'days')}</b> дней
+                &nbsp;осталось: <b>{moment(account.premiumTo).diff(moment(), 'days')}</b> дней
               </AccountMetadataValue>
             </AccountMetadataRow>
           )}
