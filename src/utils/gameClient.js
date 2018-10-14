@@ -28,7 +28,7 @@ function checkExistsHashMap(path) {
   return exists(path || gameClientHashMapFilePath());
 }
 
-function readHashMap(path) {
+async function readHashMap(path) {
   try {
     const buf = await readFile(path || gameClientHashMapFilePath());
     const str = buf.toString();
