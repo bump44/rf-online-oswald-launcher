@@ -52,7 +52,7 @@ function entryFormatter(string = "") {
   return newString.toLowerCase();
 }
 
-function buildHashMap() {
+async function buildHashMap() {
   const hashMap = await Promise.mapSeries(await readdir(gameClientExtractedPath()), async file => {
     const entry = entryFormatter(file);
     return { path: file, entry, md5: md5(entry), version: "", version: await md5File(file) };
