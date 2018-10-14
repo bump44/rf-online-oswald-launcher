@@ -1,22 +1,23 @@
-import Promise from 'bluebird';
-import md5 from 'md5';
-import md5File from 'md5-file/promise';
-import { forEach } from 'lodash';
-import { exists, readFile, readdir, writeFile } from './fs';
-import { gameClientPath, gameClientPackageFilePath, gameClientHashMapFilePath, gameClientExtractedPath } from './path';
+import Promise from "bluebird";
+import md5 from "md5";
+import md5File from "md5-file/promise";
+import { forEach } from "lodash";
+import { exists, readFile, readdir, writeFile } from "./fs";
+import {
+  gameClientPath,
+  gameClientPackageFilePath,
+  gameClientHashMapFilePath,
+  gameClientExtractedPath
+} from "./path";
 
-const requiredFiles = [
-  'datatable/item.edf',
-  'rf_online.bin',
-];
+const requiredFiles = ["datatable/item.edf", "rf_online.bin"];
 
-function checkExists() {
-  return Promise.mapSeries(requiredFiles, (subpath) => {
+async function checkExists() {
+  const results = await Promise.mapSeries(requiredFiles, subpath => {
     return exists(gameClientPath(subpath));
-  })
-    .then((results) => {
-      return !(results.find((res) => res === false) === false);
-    });
+  });
+
+  return !(results.find(res => res === false) === false);
 }
 
 function checkExistsPackage() {
@@ -28,16 +29,15 @@ function checkExistsHashMap(path) {
 }
 
 function readHashMap(path) {
-  return readFile(path || gameClientHashMapFilePath())
-    .then((buf) => {
-      const str = buf.toString();
-      const json = JSON.parse(str);
-      return json;
-    })
-    .catch((err) => {
-      console.error(err);
-      return {}; // igonore error
-    });
+  try {
+    const buf = await readFile(path || gameClientHashMapFilePath());
+    const str = buf.toString();
+    const json = JSON.parse(str);
+    return json;
+  } catch (error) {
+    console.error(error);
+    return {}; // igonore error
+  }
 }
 
 function writeHashMap(hashMap = {}) {
@@ -45,45 +45,35 @@ function writeHashMap(hashMap = {}) {
   return writeFile(gameClientHashMapFilePath(), str);
 }
 
-function entryFormatter(string = '') {
+function entryFormatter(string = "") {
   let newString = string;
-  newString = newString.replace(gameClientExtractedPath(), '');
-  newString = newString.replace(/[^a-z0-9.\-_]/gi, '');
+  newString = newString.replace(gameClientExtractedPath(), "");
+  newString = newString.replace(/[^a-z0-9.\-_]/gi, "");
   return newString.toLowerCase();
 }
 
 function buildHashMap() {
-  return readdir(gameClientExtractedPath())
-    .then((files) => {
-      return files.map((file) => {
-        const entry = entryFormatter(file);
-        return { path: file, entry, md5: md5(entry), version: '' };
-      });
-    })
-    .then((files) => {
-      return Promise.mapSeries(files, async (file) => ({
-        ...file,
-        version: await md5File(file.path),
-      }));
-    })
-    .then((hashMap) => {
-      const objectMap = {};
-      hashMap.forEach((file) => {
-        if (objectMap[file.md5] !== undefined) {
-          console.error('Name duplicated', file);
-        }
-        objectMap[file.md5] = file;
-      });
-      return objectMap;
-    });
+  const hashMap = await Promise.mapSeries(await readdir(gameClientExtractedPath()), async file => {
+    const entry = entryFormatter(file);
+    return { path: file, entry, md5: md5(entry), version: "", version: await md5File(file) };
+  });
+
+  const objectMap = {};
+  hashMap.forEach(file => {
+    if (objectMap[file.md5] !== undefined) {
+      console.error("Name duplicated", file);
+    }
+    objectMap[file.md5] = file;
+  });
+  return objectMap;
 }
 
 function getHashMapVersion(hashMap) {
   const strs = [];
-  forEach(hashMap, (file) => {
+  forEach(hashMap, file => {
     strs.push(file.version);
   });
-  return md5(strs.sort().join(''));
+  return md5(strs.sort().join(""));
 }
 
 function compareHashMaps(actual = {}, current = {}) {
@@ -94,7 +84,7 @@ function compareHashMaps(actual = {}, current = {}) {
     if (current[key] === undefined || current[key].version !== file.version) {
       notCompared[key] = {
         actual: file,
-        current: current[key],
+        current: current[key]
       };
     }
   });
@@ -104,7 +94,7 @@ function compareHashMaps(actual = {}, current = {}) {
     if (actual[key] === undefined) {
       notCompared[key] = {
         actual: undefined,
-        current: file,
+        current: file
       };
     }
   });
@@ -120,5 +110,5 @@ export default {
   buildHashMap,
   getHashMapVersion,
   compareHashMaps,
-  writeHashMap,
-}
+  writeHashMap
+};
