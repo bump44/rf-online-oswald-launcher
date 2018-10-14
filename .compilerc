@@ -16,8 +16,7 @@
         ],
         "plugins": [
           "transform-async-to-generator",
-          "styled-components",
-          "react-hot-loader/babel"
+          "styled-components"
         ],
         "sourceMaps": "inline"
       }
