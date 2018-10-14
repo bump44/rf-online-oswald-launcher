@@ -5,6 +5,4 @@ import Root from './containers/Root';
 
 moment.locale('ru');
 
-ReactDOM.render((
-  <Root />
-), document.getElementById('appMount'));
+ReactDOM.render(<Root />, document.getElementById('appMount'));

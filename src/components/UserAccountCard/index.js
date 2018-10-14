@@ -2,12 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import moment from 'moment';
-import UserAccountCardWrapper, { AccountName, AccountMetadataRow, AccountMetadataTitle, AccountMetadataValue, AccountBanned, AccountPremium, AccountButton, AccountActions } from './styles';
+import UserAccountCardWrapper, {
+  AccountName,
+  AccountMetadataRow,
+  AccountMetadataTitle,
+  AccountMetadataValue,
+  AccountBanned,
+  AccountPremium,
+  AccountButton,
+  AccountActions,
+} from './styles';
 
 export default class UserAccountCard extends React.PureComponent {
   static propTypes = {
     account: PropTypes.object.isRequired,
-    onSelect: PropTypes.func,
     onClickLaunch: PropTypes.func,
     onClickLaunchKill: PropTypes.func,
     launchState: PropTypes.object,
@@ -27,21 +35,24 @@ export default class UserAccountCard extends React.PureComponent {
   }
 
   onClickLaunch() {
-    if (typeof this.props.onClickLaunch === 'function') {
-      this.props.onClickLaunch(this.props.account);
+    const { onClickLaunch, account } = this.props;
+    if (typeof onClickLaunch === 'function') {
+      onClickLaunch(account);
     }
   }
 
   onClickLaunchKill() {
-    if (typeof this.props.onClickLaunchKill === 'function') {
-      this.props.onClickLaunchKill(this.props.account);
+    const { onClickLaunchKill, account } = this.props;
+    if (typeof onClickLaunchKill === 'function') {
+      onClickLaunchKill(account);
     }
   }
 
   isDisabledLaunch() {
-    const worker = this.props.launchState.workers[this.props.account.id];
+    const { launchState, account, serverLoginState } = this.props;
+    const worker = launchState.workers[account.id];
 
-    if (!this.props.serverLoginState.bConnected) {
+    if (!serverLoginState.bConnected) {
       return true;
     }
 
@@ -56,7 +67,7 @@ export default class UserAccountCard extends React.PureComponent {
     const { account, serverLoginState, launchState } = this.props;
     const { workers } = launchState;
 
-    const worker = workers[this.props.account.id];
+    const worker = workers[account.id];
 
     if (account.isBanned) {
       return 'заблокирован';
@@ -90,6 +101,7 @@ export default class UserAccountCard extends React.PureComponent {
     const { workers } = launchState;
 
     const worker = workers[account.id];
+    const isWorkerExecution = worker && worker.execution;
 
     return (
       <UserAccountCardWrapper>
@@ -101,50 +113,69 @@ export default class UserAccountCard extends React.PureComponent {
             'text-red': account.isBanned,
           })}
         >
-          {account.bGM && (<span>[GM]&nbsp;</span>)}
+          {account.bGM && <span>[GM]&nbsp;</span>}
           {account.name}
           &nbsp;
-          <small className="text-muted">
-            {this.getAccountStateMessage()}
-          </small>
+          <small className="text-muted">{this.getAccountStateMessage()}</small>
         </AccountName>
 
         <AccountMetadataRow>
-          <AccountMetadataTitle>Первый запуск:</AccountMetadataTitle>&nbsp;
+          <AccountMetadataTitle>Первый запуск:</AccountMetadataTitle>
+          &nbsp;
           <AccountMetadataValue>
-            {account.firstLoginAt ? moment(account.lastLoginAt).format('LLLL') : '—'}
-            &nbsp;{account.firstLoginIp ? `(${account.firstLoginIp})` : ''}
+            {account.firstLoginAt
+              ? moment(account.lastLoginAt).format('LLLL')
+              : '—'}
+            &nbsp;
+            {account.firstLoginIp ? `(${account.firstLoginIp})` : ''}
           </AccountMetadataValue>
         </AccountMetadataRow>
 
         <AccountMetadataRow>
-          <AccountMetadataTitle>Последний запуск:</AccountMetadataTitle>&nbsp;
+          <AccountMetadataTitle>Последний запуск:</AccountMetadataTitle>
+          &nbsp;
           <AccountMetadataValue>
-            {account.lastLoginAt ? moment(account.lastLoginAt).format('LLLL') : '—'}
-            &nbsp;{account.lastLoginIp ? `(${account.lastLoginIp})` : ''}
+            {account.lastLoginAt
+              ? moment(account.lastLoginAt).format('LLLL')
+              : '—'}
+            &nbsp;
+            {account.lastLoginIp ? `(${account.lastLoginIp})` : ''}
           </AccountMetadataValue>
         </AccountMetadataRow>
 
         <hr />
 
         <AccountPremium>
-          <AccountName>Премиум <small className="text-muted">{account.bPremium ? 'подключен' : 'не подключен'}</small></AccountName>
+          <AccountName>
+            Премиум{' '}
+            <small className="text-muted">
+              {account.bPremium ? 'подключен' : 'не подключен'}
+            </small>
+          </AccountName>
           {account.bPremium && (
             <AccountMetadataRow>
-              <AccountMetadataTitle>Дата подключения и отключения:</AccountMetadataTitle>&nbsp;
+              <AccountMetadataTitle>
+                Дата подключения и отключения:
+              </AccountMetadataTitle>
+              &nbsp;
               <AccountMetadataValue>
-                c {moment(account.premiumFrom).format('LLL')} по {moment(account.premiumTo).format('LLL')}
-                &nbsp;осталось: <b>{moment(account.premiumTo).diff(moment(), 'days')}</b> дней
+                c {moment(account.premiumFrom).format('LLL')} по{' '}
+                {moment(account.premiumTo).format('LLL')}
+                &nbsp;осталось:{' '}
+                <b>{moment(account.premiumTo).diff(moment(), 'days')}</b> дней
               </AccountMetadataValue>
             </AccountMetadataRow>
           )}
         </AccountPremium>
 
         {account.isBanned && (
-					<AccountBanned>
+          <AccountBanned>
             {account.bannedTo && (
               <AccountMetadataRow>
-                <AccountMetadataTitle>Доступ к аккаунту ограничен до:</AccountMetadataTitle>&nbsp;
+                <AccountMetadataTitle>
+                  Доступ к аккаунту ограничен до:
+                </AccountMetadataTitle>
+                &nbsp;
                 <AccountMetadataValue>
                   {moment(account.bannedTo).format('LLL')}
                 </AccountMetadataValue>
@@ -152,17 +183,21 @@ export default class UserAccountCard extends React.PureComponent {
             )}
             {!account.bannedTo && (
               <AccountMetadataRow>
-                <AccountMetadataTitle>Аккаунт навсегда заблокирован</AccountMetadataTitle>
+                <AccountMetadataTitle>
+                  Аккаунт навсегда заблокирован
+                </AccountMetadataTitle>
               </AccountMetadataRow>
             )}
             <AccountMetadataRow>
-              <AccountMetadataTitle>Дата блокировки:</AccountMetadataTitle>&nbsp;
+              <AccountMetadataTitle>Дата блокировки:</AccountMetadataTitle>
+              &nbsp;
               <AccountMetadataValue>
                 {moment(account.bannedFrom).format('LLL')}
               </AccountMetadataValue>
             </AccountMetadataRow>
             <AccountMetadataRow>
-              <AccountMetadataTitle>Причина:</AccountMetadataTitle>&nbsp;
+              <AccountMetadataTitle>Причина:</AccountMetadataTitle>
+              &nbsp;
               <AccountMetadataValue>
                 {account.banReason || '—'}
               </AccountMetadataValue>
@@ -172,16 +207,22 @@ export default class UserAccountCard extends React.PureComponent {
         <AccountActions>
           {!account.isBanned && (
             <React.Fragment>
-              <AccountButton onClick={this.onClickLaunch} disabled={this.isDisabledLaunch()}>
+              <AccountButton
+                onClick={this.onClickLaunch}
+                disabled={this.isDisabledLaunch()}
+              >
                 <i className="fa fa-fw fa-play" />
                 Запустить
               </AccountButton>
               &nbsp;
             </React.Fragment>
           )}
-          {worker && worker.execution && (
+          {isWorkerExecution && (
             <React.Fragment>
-              <AccountButton className="btn btn-danger btn-sm" onClick={this.onClickLaunchKill}>
+              <AccountButton
+                className="btn btn-danger btn-sm"
+                onClick={this.onClickLaunchKill}
+              >
                 <i className="fa fa-fw fa-times" />
                 Закрыть процесс (принудительно)
               </AccountButton>
@@ -189,7 +230,8 @@ export default class UserAccountCard extends React.PureComponent {
             </React.Fragment>
           )}
           <AccountButton className="btn btn-warning btn-sm">
-            {account.bPremium ? 'Продлить' : 'Подключить'}&nbsp;премиум
+            {account.bPremium ? 'Продлить' : 'Подключить'}
+            &nbsp;премиум
           </AccountButton>
         </AccountActions>
       </UserAccountCardWrapper>

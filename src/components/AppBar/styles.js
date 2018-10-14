@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import cx from 'classnames';
 
 export default styled.div`
   height: 24px;
@@ -36,7 +37,7 @@ export const ServerLoginMessage = styled.div.attrs({
   font-size: 10px;
   font-family: Verdana, sans-serif;
   top: 17px;
-  opacity: .7;
+  opacity: 0.7;
 `;
 
 export const Brand = styled.h1`
@@ -47,33 +48,33 @@ export const Brand = styled.h1`
   margin-right: 15px;
 `;
 
+/* eslint-disable indent */
 export const ConnectionStateWrapper = styled.span`
   font-size: 12px;
   color: #fff;
   line-height: 24px;
 
-  ${(props) => props.type === 'success' && (`
-    color: #45da45;
-  `)}
-
-  ${(props) => props.type === 'error' && (`
-    color: red;
-  `)}
+  ${props => props.type === 'success' && `color: #45da45;`} ${props =>
+    props.type === 'error' && `color: red;`};
 `;
+/* eslint-enable indent */
 
-export const ConnectionState = ({ connected = false, connecting = false, isError = false, errorMessage = '' } = props = {}) => (
+export const ConnectionState = ({
+  connected = false,
+  connecting = false,
+  isError = false,
+  errorMessage = '',
+} = {}) => (
   <ConnectionStateWrapper
-    type={connected ? 'success' : isError ? 'error' : 'default'}
+    type={cx({
+      success: connected,
+      error: !connected && isError,
+      default: !connected && !isError,
+    })}
   >
-    {connecting && (
-      <span>Подключаемся...</span>
-    )}
-    {isError && (
-      <span>Ошибка: {errorMessage}</span>
-    )}
-    {connected && (
-      <span>Соединение установлено</span>
-    )}
+    {connecting && <span>Подключаемся...</span>}
+    {isError && <span>Ошибка: {errorMessage}</span>}
+    {connected && <span>Соединение установлено</span>}
   </ConnectionStateWrapper>
 );
 
@@ -91,7 +92,7 @@ export const ButtonClose = styled.button`
   padding-bottom: 2px;
   -webkit-app-region: no-drag;
   cursor: pointer;
-  transition: all .1s linear;
+  transition: all 0.1s linear;
   &:hover {
     background-color: #000;
   }

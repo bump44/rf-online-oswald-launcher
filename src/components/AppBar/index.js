@@ -1,7 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { remote } from 'electron';
-import AppBarWrapper, { Brand, ConnectionState, ButtonClose, ServerLoginIndicator, ServerLoginMessage } from './styles';
+import cx from 'classnames';
+import AppBarWrapper, {
+  Brand,
+  ConnectionState,
+  ButtonClose,
+  ServerLoginIndicator,
+  ServerLoginMessage,
+} from './styles';
+
 import Audio from './Audio';
 
 export default class AppBar extends React.PureComponent {
@@ -25,7 +33,12 @@ export default class AppBar extends React.PureComponent {
   };
 
   static defaultProps = {
-    socketState: { connected: false, connecting: false, isError: false, errorMessage: '' },
+    socketState: {
+      connected: false,
+      connecting: false,
+      isError: false,
+      errorMessage: '',
+    },
   };
 
   constructor(props) {
@@ -34,21 +47,38 @@ export default class AppBar extends React.PureComponent {
   }
 
   render() {
-    const { brand, socketState, userState, serverLoginState } = this.props;
+    const {
+      brand,
+      socketState,
+      userState,
+      serverLoginState,
+      onChangeAudioPlayOnStart,
+    } = this.props;
+
+    const color = cx({
+      green: serverLoginState.bConnected,
+      orange: !serverLoginState.bConnected && serverLoginState.bConnection,
+      '#ddd': !serverLoginState.bConnected && !serverLoginState.bConnection,
+    });
 
     return (
       <AppBarWrapper>
-        <ServerLoginMessage color={serverLoginState.bConnected ? 'green' : serverLoginState.bConnection ? 'orange' : '#ddd'}>
-          {serverLoginState.bConnected ? 'Логин сервер доступен' : serverLoginState.bConnection ? 'Ожидание ответа от логин сервера' : 'Логин сервер не отвечает'}
+        <ServerLoginMessage color={color}>
+          {cx({
+            'Логин сервер доступен': serverLoginState.bConnected,
+            'Ожидание ответа от логин сервера':
+              !serverLoginState.bConnected && serverLoginState.bConnection,
+            'Логин сервер не отвечает':
+              !serverLoginState.bConnected && !serverLoginState.bConnection,
+          })}
         </ServerLoginMessage>
-        <ServerLoginIndicator
-          backgroundColor={serverLoginState.bConnected ? 'green' : serverLoginState.bConnection ? 'orange' : '#ddd'}
-        />
+        <ServerLoginIndicator backgroundColor={color} />
         <Brand>{brand}</Brand>
-        <ConnectionState
-          {...socketState}
+        <ConnectionState {...socketState} />
+        <Audio
+          play={userState.audioPlayOnStart}
+          onChangePlayOnStart={onChangeAudioPlayOnStart}
         />
-        <Audio play={userState.audioPlayOnStart} onChangePlayOnStart={this.props.onChangeAudioPlayOnStart} />
         <ButtonClose onClick={this.onClickQuit}>x</ButtonClose>
       </AppBarWrapper>
     );

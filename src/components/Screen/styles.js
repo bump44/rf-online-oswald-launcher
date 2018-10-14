@@ -54,4 +54,3 @@ export const HintMessage = styled.span`
   font-family: Verdana, sans-serif;
   color: #9e9e9e;
 `;
-

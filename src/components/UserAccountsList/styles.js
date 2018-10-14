@@ -16,15 +16,17 @@ export const AccountGroup = styled.div`
   border-bottom: 1px solid #232323;
   position: relative;
   cursor: pointer;
-  transition: all .1s ease-in-out;
+  transition: all 0.1s ease-in-out;
 
   &:hover {
     background-color: #232323;
   }
 
-  ${(props) => (props.selected) && (`
+  ${props =>
+    props.selected &&
+    `
     background-color: #232323;
-  `)}
+  `};
 `;
 
 export const AccountName = styled.div`
@@ -33,7 +35,10 @@ export const AccountName = styled.div`
   padding-left: 10px;
 `;
 
-export const SearchInput = styled.input.attrs({ placeholder: 'Поиск...', className: 'form-control' })`
+export const SearchInput = styled.input.attrs({
+  placeholder: 'Поиск...',
+  className: 'form-control',
+})`
   height: 30px;
   line-height: 30px;
   color: #e0e0e0;
@@ -58,6 +63,6 @@ export const SearchInput = styled.input.attrs({ placeholder: 'Поиск...', cl
   }
   &:disabled,
   &[readonly] {
-    opacity: .7;
+    opacity: 0.7;
   }
 `;

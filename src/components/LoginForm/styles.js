@@ -10,7 +10,7 @@ export const FieldGroup = styled.div`
 `;
 
 export const FieldLabel = styled.div`
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   font-size: 14px;
 `;
 
@@ -34,7 +34,7 @@ export const FieldInput = styled.input.attrs({ className: 'form-control' })`
   }
   &:disabled,
   &[readonly] {
-    opacity: .7;
+    opacity: 0.7;
   }
 `;
 

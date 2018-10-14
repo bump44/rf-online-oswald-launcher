@@ -10,7 +10,7 @@ export async function extract(filePath, tickHandler) {
   await mkdir(tmpPath);
   const fileStat = await stat(filePath);
 
-  let totalSize = fileStat.size;
+  const totalSize = fileStat.size;
   let extractedSize = 0;
 
   const percent = () => {
@@ -20,7 +20,7 @@ export async function extract(filePath, tickHandler) {
     if (extractedSize >= totalSize) {
       return 100;
     }
-    return parseFloat((extractedSize / totalSize * 100).toFixed(2));
+    return parseFloat(((extractedSize / totalSize) * 100).toFixed(2));
   };
 
   const props = { dir: tmpPath };
@@ -31,11 +31,17 @@ export async function extract(filePath, tickHandler) {
 
     extractedSize += entry.compressedSize || 0;
 
-    tickHandler({ totalSize, extractedSize, percent: percent(), entry, zipfile });
+    tickHandler({
+      totalSize,
+      extractedSize,
+      percent: percent(),
+      entry,
+      zipfile,
+    });
   };
 
   return new Promise((resolve, reject) => {
-    extractZip(filePath, props, (err) => {
+    extractZip(filePath, props, err => {
       if (err) {
         return reject(err);
       }
@@ -46,20 +52,17 @@ export async function extract(filePath, tickHandler) {
         extractedSize,
         rename(newPath) {
           let attempt = 0;
-          const tryRename = () => {
-            return rename(tmpPath, newPath)
-              .catch((err) => {
-                if (err.code === 'EPERM' && attempt <= 60) {
-                  attempt += 1;
-                  return Promise.delay(1000)
-                    .then(() => tryRename());
-                }
-                throw err;
-              })
-          };
+          const tryRename = () =>
+            rename(tmpPath, newPath).catch(err1 => {
+              if (err1.code === 'EPERM' && attempt <= 60) {
+                attempt += 1;
+                return Promise.delay(1000).then(() => tryRename());
+              }
+              throw err1;
+            });
 
           return tryRename();
-        }
+        },
       });
     });
   });

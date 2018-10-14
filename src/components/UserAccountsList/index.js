@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { escapeRegExp } from 'lodash';
 import cx from 'classnames';
-import UserAccountsListWrapper, { AccountGroup, AccountName, SearchInput } from './styles';
+import UserAccountsListWrapper, {
+  AccountGroup,
+  AccountName,
+  SearchInput,
+} from './styles';
 
 const style = { minHeight: 100, height: '100%', marginBottom: 15 };
 
@@ -31,8 +35,9 @@ export default class UserAccountsList extends React.Component {
   }
 
   onClick(account, index) {
-    if (typeof this.props.onSelect === 'function') {
-      this.props.onSelect(account, index);
+    const { onSelect } = this.props;
+    if (typeof onSelect === 'function') {
+      onSelect(account, index);
     }
   }
 
@@ -53,7 +58,17 @@ export default class UserAccountsList extends React.Component {
       return 'запущен';
     }
 
-    return account.isBanned ? 'заблокирован' : !account.bCreated ? 'создается' : account.bPremium ? 'премиум' : '';
+    const titles = ['заблокирован', 'создается', 'премиум'];
+
+    return (
+      titles[
+        cx({
+          0: account.isBanned,
+          1: !account.isBanned && !account.bCreated,
+          2: !account.isBanned && account.bCreated && account.bPremium,
+        })
+      ] || ''
+    );
   }
 
   getAccountsByPredicates() {
@@ -66,36 +81,59 @@ export default class UserAccountsList extends React.Component {
 
     const regenerated = Object.assign([], accounts);
     const regex = new RegExp(escapeRegExp(searchString), 'ig');
-    const testGM = (new RegExp('GM', 'ig')).test(searchString);
-    const testPREMIUM = (new RegExp('(PREMIUM|PREM|RUB)', 'ig')).test(searchString);
+    const testGM = new RegExp('GM', 'ig').test(searchString);
+    const testPREMIUM = new RegExp('(PREMIUM|PREM|RUB)', 'ig').test(
+      searchString,
+    );
 
     return regenerated
       .map((account, index) => ({
         ...account,
         __index: index,
       }))
-      .filter((account) => !!regex.test(account.name) || (testGM && account.bGM) || (testPREMIUM && account.bPremium));
+      .filter(
+        account =>
+          !!regex.test(account.name) ||
+          (testGM && account.bGM) ||
+          (testPREMIUM && account.bPremium),
+      );
   }
 
   render() {
-    const accounts = this.getAccountsByPredicates();
+    const accountsByPredicates = this.getAccountsByPredicates();
+    const { accounts, selected } = this.props;
+    const { searchString } = this.state;
 
     return (
       <React.Fragment>
-        {this.props.accounts.length >= 10 && (
-          <SearchInput value={this.state.searchString} onChange={this.onChangeSearchString} />
+        {accounts.length >= 10 && (
+          <SearchInput
+            value={searchString}
+            onChange={this.onChangeSearchString}
+          />
         )}
 
         <Scrollbars
           style={style}
-          renderTrackVertical={(props) => <div {...props} style={{ ...props.style, right: 1, top: 1, bottom: 1, }} />}
+          renderTrackVertical={props => (
+            <div
+              {...props}
+              style={{ ...props.style, right: 1, top: 1, bottom: 1 }}
+            />
+          )}
         >
           <UserAccountsListWrapper>
-            {accounts.map((account, index) => (
+            {accountsByPredicates.map((account, index) => (
               <AccountGroup
                 key={account.id}
-                onClick={this.onClick.bind(null, account, account.__index !== undefined ? account.__index : index)}
-                selected={this.props.selected === index}
+                // eslint-disable-next-line
+                onClick={this.onClick.bind(
+                  null,
+                  account,
+                  // eslint-disable-next-line
+                  account.__index !== undefined ? account.__index : index,
+                )}
+                selected={selected === index}
               >
                 <AccountName
                   className={cx({
@@ -105,7 +143,7 @@ export default class UserAccountsList extends React.Component {
                     'text-red': account.isBanned,
                   })}
                 >
-                  {account.bGM && (<span>[GM]&nbsp;</span>)}
+                  {account.bGM && <span>[GM]&nbsp;</span>}
                   {account.name}
                   &nbsp;
                   <small className="text-muted">

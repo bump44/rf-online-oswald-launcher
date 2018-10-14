@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ScreenWrapper, { Overlay, Aside, Content, HintMessage, ButtonLogout } from './styles';
+import ScreenWrapper, {
+  Overlay,
+  Aside,
+  Content,
+  HintMessage,
+  ButtonLogout,
+} from './styles';
 
 import LoginForm from '../LoginForm';
 import TokenActivationForm from '../TokenActivationForm';
@@ -33,78 +39,100 @@ export default class Screen extends React.PureComponent {
     serverDisplayState: PropTypes.object,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
+    const {
+      userState,
+      onClickLogout,
+      userAccountsState,
+      onSelectUserAccount,
+      launchState,
+      onSubmitUserAccountCreate,
+      userAccountCreateState,
+      onSubmitLogin,
+      loginState,
+      onSubmitTokenActivation,
+      onClickBackFromTokenActivation,
+      serverDisplayState,
+      onClickLaunchUserAccount,
+      onClickLaunchKillUserAccount,
+      serverLoginState,
+    } = this.props;
+
+    const isReadyAccounts =
+      !userAccountsState.isLoading && userAccountsState.accounts.length <= 0;
+    const isReadyCreateNewAccount =
+      !userAccountsState.isLoading && userAccountsState.accounts.length < 70;
+    const isReadyUserLogin = !userState.obj && !loginState.isActivation;
+    const isReadyUserActivation = !userState.obj && loginState.isActivation;
+
     return (
       <React.Fragment>
         <Overlay />
         <ScreenWrapper>
           <Aside>
-            {this.props.userState.obj && (
+            {userState.obj && (
               <React.Fragment>
                 <div className="mb15">
                   <i className="fa fa-fw fa-user" />
-                  <span className="text-orange">{this.props.userState.obj.name}</span> <small>{this.props.userState.obj.role.title}</small>
+                  <span className="text-orange">{userState.obj.name}</span>{' '}
+                  <small>{userState.obj.role.title}</small>
                   &nbsp;
-                  <ButtonLogout onClick={this.props.onClickLogout}>
+                  <ButtonLogout onClick={onClickLogout}>
                     <i className="fa fa-times" title="Выход" />
                   </ButtonLogout>
                 </div>
-                {!this.props.userAccountsState.isLoading && this.props.userAccountsState.accounts.length <= 0 && (
+                {isReadyAccounts && (
                   <HintMessage className="mb15">
-                    <span className="text-orange">{'<hint>'}</span> У вас еще нет игровых аккаунтов, создайте свой первый аккаунт:
+                    <span className="text-orange">{'<hint>'}</span> У вас еще
+                    нет игровых аккаунтов, создайте свой первый аккаунт:
                   </HintMessage>
                 )}
-                {this.props.userAccountsState.accounts.length > 0 && (
+                {userAccountsState.accounts.length > 0 && (
                   <UserAccountsList
-                    accounts={this.props.userAccountsState.accounts}
-                    onSelect={this.props.onSelectUserAccount}
-                    selected={this.props.userAccountsState.selected}
-                    launchState={this.props.launchState}
+                    accounts={userAccountsState.accounts}
+                    onSelect={onSelectUserAccount}
+                    selected={userAccountsState.selected}
+                    launchState={launchState}
                   />
                 )}
-                {!this.props.userAccountsState.isLoading && this.props.userAccountsState.accounts.length < 70 && (
+                {isReadyCreateNewAccount && (
                   <UserAccountCreateForm
-                    onSubmit={this.props.onSubmitUserAccountCreate}
-                    isLoading={this.props.userAccountCreateState.isLoading}
-                    isError={this.props.userAccountCreateState.isError}
-                    errorMessage={this.props.userAccountCreateState.errorMessage}
+                    onSubmit={onSubmitUserAccountCreate}
+                    isLoading={userAccountCreateState.isLoading}
+                    isError={userAccountCreateState.isError}
+                    errorMessage={userAccountCreateState.errorMessage}
                   />
                 )}
               </React.Fragment>
             )}
-            {!this.props.userState.obj && !this.props.loginState.isActivation && (
+            {isReadyUserLogin && (
               <LoginForm
-                onSubmit={this.props.onSubmitLogin}
-                isLoading={this.props.loginState.isLoading}
-                isError={this.props.loginState.isError}
-                errorMessage={this.props.loginState.errorMessage}
+                onSubmit={onSubmitLogin}
+                isLoading={loginState.isLoading}
+                isError={loginState.isError}
+                errorMessage={loginState.errorMessage}
               />
             )}
-            {!this.props.userState.obj && this.props.loginState.isActivation && (
+            {isReadyUserActivation && (
               <TokenActivationForm
-                onSubmit={this.props.onSubmitTokenActivation}
-                onClickBack={this.props.onClickBackFromTokenActivation}
-                isLoading={this.props.loginState.isLoading}
-                isError={this.props.loginState.isError}
-                errorMessage={this.props.loginState.errorMessage}
+                onSubmit={onSubmitTokenActivation}
+                onClickBack={onClickBackFromTokenActivation}
+                isLoading={loginState.isLoading}
+                isError={loginState.isError}
+                errorMessage={loginState.errorMessage}
               />
             )}
           </Aside>
           <Content>
-            <OnlineStatus
-              serverDisplayState={this.props.serverDisplayState}
-            />
-            {this.props.userAccountsState.accounts[this.props.userAccountsState.selected] !== undefined && (
+            <OnlineStatus serverDisplayState={serverDisplayState} />
+            {userAccountsState.accounts[userAccountsState.selected] !==
+              undefined && (
               <UserAccountCard
-                account={this.props.userAccountsState.accounts[this.props.userAccountsState.selected]}
-                serverLoginState={this.props.serverLoginState}
-                launchState={this.props.launchState}
-                onClickLaunch={this.props.onClickLaunchUserAccount}
-                onClickLaunchKill={this.props.onClickLaunchKillUserAccount}
+                account={userAccountsState.accounts[userAccountsState.selected]}
+                serverLoginState={serverLoginState}
+                launchState={launchState}
+                onClickLaunch={onClickLaunchUserAccount}
+                onClickLaunchKill={onClickLaunchKillUserAccount}
               />
             )}
           </Content>

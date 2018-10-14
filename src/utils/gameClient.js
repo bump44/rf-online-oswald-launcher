@@ -1,22 +1,21 @@
-import Promise from "bluebird";
-import md5 from "md5";
-import md5File from "md5-file/promise";
-import { forEach } from "lodash";
-import { exists, readFile, readdir, writeFile } from "./fs";
+import Promise from 'bluebird';
+import md5 from 'md5';
+import md5File from 'md5-file/promise';
+import { forEach } from 'lodash';
+import { exists, readFile, readdir, writeFile } from './fs';
 import {
   gameClientPath,
   gameClientPackageFilePath,
   gameClientHashMapFilePath,
-  gameClientExtractedPath
-} from "./path";
+  gameClientExtractedPath,
+} from './path';
 
-const requiredFiles = ["datatable/item.edf", "rf_online.bin"];
+const requiredFiles = ['datatable/item.edf', 'rf_online.bin'];
 
 async function checkExists() {
-  const results = await Promise.mapSeries(requiredFiles, subpath => {
-    return exists(gameClientPath(subpath));
-  });
-
+  const results = await Promise.mapSeries(requiredFiles, subpath =>
+    exists(gameClientPath(subpath)),
+  );
   return !(results.find(res => res === false) === false);
 }
 
@@ -35,6 +34,7 @@ async function readHashMap(path) {
     const json = JSON.parse(str);
     return json;
   } catch (error) {
+    // eslint-disable-next-line
     console.error(error);
     return {}; // igonore error
   }
@@ -45,23 +45,32 @@ function writeHashMap(hashMap = {}) {
   return writeFile(gameClientHashMapFilePath(), str);
 }
 
-function entryFormatter(string = "") {
+function entryFormatter(string = '') {
   let newString = string;
-  newString = newString.replace(gameClientExtractedPath(), "");
-  newString = newString.replace(/[^a-z0-9.\-_]/gi, "");
+  newString = newString.replace(gameClientExtractedPath(), '');
+  newString = newString.replace(/[^a-z0-9.\-_]/gi, '');
   return newString.toLowerCase();
 }
 
 async function buildHashMap() {
-  const hashMap = await Promise.mapSeries(await readdir(gameClientExtractedPath()), async file => {
-    const entry = entryFormatter(file);
-    return { path: file, entry, md5: md5(entry), version: "", version: await md5File(file) };
-  });
+  const hashMap = await Promise.mapSeries(
+    await readdir(gameClientExtractedPath()),
+    async file => {
+      const entry = entryFormatter(file);
+      return {
+        path: file,
+        entry,
+        md5: md5(entry),
+        version: await md5File(file),
+      };
+    },
+  );
 
   const objectMap = {};
   hashMap.forEach(file => {
     if (objectMap[file.md5] !== undefined) {
-      console.error("Name duplicated", file);
+      // eslint-disable-next-line
+      console.error('Name duplicated', file);
     }
     objectMap[file.md5] = file;
   });
@@ -73,7 +82,7 @@ function getHashMapVersion(hashMap) {
   forEach(hashMap, file => {
     strs.push(file.version);
   });
-  return md5(strs.sort().join(""));
+  return md5(strs.sort().join(''));
 }
 
 function compareHashMaps(actual = {}, current = {}) {
@@ -84,7 +93,7 @@ function compareHashMaps(actual = {}, current = {}) {
     if (current[key] === undefined || current[key].version !== file.version) {
       notCompared[key] = {
         actual: file,
-        current: current[key]
+        current: current[key],
       };
     }
   });
@@ -94,7 +103,7 @@ function compareHashMaps(actual = {}, current = {}) {
     if (actual[key] === undefined) {
       notCompared[key] = {
         actual: undefined,
-        current: file
+        current: file,
       };
     }
   });
@@ -110,5 +119,5 @@ export default {
   buildHashMap,
   getHashMapVersion,
   compareHashMaps,
-  writeHashMap
+  writeHashMap,
 };

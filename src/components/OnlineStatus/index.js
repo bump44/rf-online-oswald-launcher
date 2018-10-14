@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import OnlineStatusWrapper, { Block, IconImage, Value } from './styles';
 
-export default class OnlineStatus extends React.Component {
+export default class OnlineStatus extends React.PureComponent {
   static propTypes = {
     serverDisplayState: PropTypes.shape({
       user: PropTypes.shape({
@@ -16,19 +16,21 @@ export default class OnlineStatus extends React.Component {
   };
 
   render() {
+    const { serverDisplayState } = this.props;
+
     return (
       <OnlineStatusWrapper>
         <Block>
           <IconImage className="accretia_icon" />
-          <Value>{this.props.serverDisplayState.user.a}</Value>
+          <Value>{serverDisplayState.user.a}</Value>
         </Block>
         <Block>
           <IconImage className="bellato_icon" />
-          <Value>{this.props.serverDisplayState.user.b}</Value>
+          <Value>{serverDisplayState.user.b}</Value>
         </Block>
         <Block>
           <IconImage className="cora_icon" />
-          <Value>{this.props.serverDisplayState.user.c}</Value>
+          <Value>{serverDisplayState.user.c}</Value>
         </Block>
       </OnlineStatusWrapper>
     );

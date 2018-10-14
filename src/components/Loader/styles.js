@@ -19,9 +19,11 @@ export const Content = styled.div`
   padding: 15px;
   background: rgba(0, 0, 0, 0.38);
 
-  ${(props) => props.type === 'danger' && (`
+  ${props =>
+    props.type === 'danger' &&
+    `
     border: 2px solid rgba(193, 15, 15, 0.72);
-  `)}
+  `};
 `;
 
 export const LoadingIndicator = styled.i.attrs({

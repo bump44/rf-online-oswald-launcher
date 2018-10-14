@@ -14,30 +14,35 @@ export default class AppBarAudio extends React.Component {
     play: false,
   };
 
-	constructor(props) {
-		super(props);
-		this.state = { track: this.getRandom() };
+  constructor(props) {
+    super(props);
+    this.state = { track: this.getRandom() };
   }
-  getByIndex = (index) => {
+
+  getByIndex = index => {
     if (!trackList[index]) {
       return null;
     }
 
     const track = Object.assign({}, trackList[index], { index });
-		return track;
-  }
-	getRandom = () => {
-		const len = trackList.length;
+    return track;
+  };
 
-		if (!len) {
+  getRandom = () => {
+    const len = trackList.length;
+
+    if (!len) {
       return null;
     }
 
     const index = Math.floor(Math.random() * len - 1) + 1;
     return this.getByIndex(index);
-  }
-	onClickNext = () => {
-		if (!this.state.track) {
+  };
+
+  onClickNext = () => {
+    const { track } = this.state;
+
+    if (!track) {
       if (trackList.length <= 0) {
         return null;
       }
@@ -45,16 +50,23 @@ export default class AppBarAudio extends React.Component {
       return this.setState({ track: this.getByIndex(0) });
     }
 
-    const nextIndex = this.state.track.index + 1;
+    const nextIndex = track.index + 1;
 
     if (this.getByIndex(nextIndex)) {
       return this.setState({ track: this.getByIndex(nextIndex) });
-    } else if (this.getByIndex(0)) {
+    }
+
+    if (this.getByIndex(0)) {
       return this.setState({ track: this.getByIndex(0) });
     }
-	}
-	onClickPrev = (el) => {
-		if (!this.state.track) {
+
+    return undefined;
+  };
+
+  onClickPrev = () => {
+    const { track } = this.state;
+
+    if (!track) {
       if (trackList.length <= 0) {
         return null;
       }
@@ -62,63 +74,70 @@ export default class AppBarAudio extends React.Component {
       return this.setState({ track: this.getByIndex(trackList.length - 1) });
     }
 
-		const prevIndex = this.state.track.index - 1;
+    const prevIndex = track.index - 1;
 
-		if (prevIndex < 0 || !this.getByIndex(prevIndex)) {
+    if (prevIndex < 0 || !this.getByIndex(prevIndex)) {
       return this.setState({ track: this.getByIndex(trackList.length - 1) });
-    } else {
-      return this.setState({ track: this.getByIndex(prevIndex) });
     }
-	}
-	onClickToggle = (el) => {
-    if (!this.state.track) {
+
+    return this.setState({ track: this.getByIndex(prevIndex) });
+  };
+
+  onClickToggle = () => {
+    const { track } = this.state;
+    const { onChangePlayOnStart, play } = this.props;
+
+    if (!track) {
       this.setState({ track: this.getRandom() });
     }
 
-    this.props.onChangePlayOnStart(!this.props.play);
-  }
+    onChangePlayOnStart(!play);
+  };
 
-	onEnded = (el) => {
-		// yo!
-		this.onClickNext();
-  }
+  onEnded = () => {
+    // yo!
+    this.onClickNext();
+  };
 
-	render() {
+  render() {
+    const { track } = this.state;
+    const { play } = this.props;
+    const isReady = play && track;
+
     return (
       <AudioWrapper>
         <AudioTrackName>
-          {trackList.length <= 0 && (
-            <span>Track List Is Empty...</span>
-          )}
-          {trackList.length > 0 && this.state.track && (
-            compact([this.state.track.executor, this.state.track.name]).join(' - ')
-          )}
+          {trackList.length <= 0 && <span>Track List Is Empty...</span>}
+          {trackList.length > 0 &&
+            track &&
+            compact([track.executor, track.name]).join(' - ')}
         </AudioTrackName>
         <AudioButtonAction onClick={this.onClickPrev}>
-          <i className="fa fa-fast-backward" aria-hidden="true"></i>
+          <i className="fa fa-fast-backward" aria-hidden="true" />
         </AudioButtonAction>
-        {this.props.play && (
+        {play && (
           <AudioButtonAction onClick={this.onClickToggle}>
-            <i className="fa fa-stop" aria-hidden="true"></i>
+            <i className="fa fa-stop" aria-hidden="true" />
           </AudioButtonAction>
         )}
-        {!this.props.play && (
+        {!play && (
           <AudioButtonAction onClick={this.onClickToggle}>
-            <i className="fa fa-play" aria-hidden="true"></i>
+            <i className="fa fa-play" aria-hidden="true" />
           </AudioButtonAction>
         )}
         <AudioButtonAction onClick={this.onClickNext}>
-          <i className="fa fa-fast-forward" aria-hidden="true"></i>
+          <i className="fa fa-fast-forward" aria-hidden="true" />
         </AudioButtonAction>
-        {this.props.play && this.state.track && (
+        {isReady && (
+          // eslint-disable-next-line
           <audio
             onEnded={this.onEnded}
-            autoPlay={this.props.play}
+            autoPlay={play}
             controls={false}
-            src={this.state.track.path+this.state.track.filename}
+            src={track.path + track.filename}
           />
         )}
       </AudioWrapper>
     );
-	}
+  }
 }

@@ -1,6 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import LoaderWrapper, { Overlay, Content, LoadingIndicator, Message, ProgressWrapper, ProgressValue, ProgressMessage, ErrorIndicator, ProgressMessageSpan } from './styles';
+import LoaderWrapper, {
+  Overlay,
+  Content,
+  LoadingIndicator,
+  Message,
+  ProgressWrapper,
+  ProgressValue,
+  ProgressMessage,
+  ErrorIndicator,
+  ProgressMessageSpan,
+} from './styles';
 
 export default class Loader extends React.PureComponent {
   static propTypes = {
@@ -21,12 +31,18 @@ export default class Loader extends React.PureComponent {
         <LoaderWrapper>
           <Content type={type}>
             {type === 'danger' ? <ErrorIndicator /> : <LoadingIndicator />}
-            {message && (<Message>{message}</Message>)}
+            {message && <Message>{message}</Message>}
 
             {progress && (
               <ProgressWrapper>
                 <ProgressValue width={progress.percent} />
-                {progress.message && (<ProgressMessage><ProgressMessageSpan>{progress.message}</ProgressMessageSpan></ProgressMessage>)}
+                {progress.message && (
+                  <ProgressMessage>
+                    <ProgressMessageSpan>
+                      {progress.message}
+                    </ProgressMessageSpan>
+                  </ProgressMessage>
+                )}
               </ProgressWrapper>
             )}
           </Content>

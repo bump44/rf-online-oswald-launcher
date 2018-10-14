@@ -25,5 +25,5 @@ export const IconImage = styled.i.attrs({})`
 
 export const Value = styled.span`
   color: #fff;
-  text-shadow: 1px 1px 0px rgba(51, 51, 51, 0.78)
+  text-shadow: 1px 1px 0px rgba(51, 51, 51, 0.78);
 `;
