@@ -807,19 +807,19 @@ class Loader extends React.Component {
       });
   }
 
-  extractGameClientPackage() {
+  async extractGameClientPackage() {
     this.setState({ message: 'Распаковываем игровой клиент...' });
     this.changeStateGameClient({ extracting: true });
 
-    return extract(gameClientPackageFilePath(), ({ percent }) => {
+    await rmdir(gameClientExtractedPath());
+    const res = await extract(gameClientPackageFilePath(), ({ percent }) => {
       this.changeStateGameClient({ percent });
-    }).then((res) => {
-      this.changeStateGameClient({ percent: 100, extracting: false });
-      this.setState({ message: 'Переносим ресурсы клиента в рабочую директорию...' });
-      return rmdir(gameClientExtractedPath())
-        .then(() => Promise.delay(1000))
-        .then(() => res.rename(gameClientExtractedPath()));
     });
+
+    this.changeStateGameClient({ percent: 100, extracting: false });
+    this.setState({ message: 'Переносим ресурсы клиента в рабочую директорию...' });
+    await Promise.delay(300);
+    return res.rename(gameClientExtractedPath());
   }
 
   getProgressProps() {
