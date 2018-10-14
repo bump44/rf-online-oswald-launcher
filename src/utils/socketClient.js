@@ -9,10 +9,13 @@ class SocketClient {
 		this.io;
 		this.isConnected = false;
     this.isConnecting = false;
+    this.reconnectError = null;
     this.stateHandler;
 
     this._handleConnect = this._handleConnect.bind(this);
     this._handleDisconnect = this._handleDisconnect.bind(this);
+    this._handleReconnectError = this._handleReconnectError.bind(this);
+    this._handleReconnect = this._handleReconnect.bind(this);
 	}
 
 	setJwt(jwt) {
@@ -33,25 +36,42 @@ class SocketClient {
 
 	bindDispatchers() {
 		this.io.on('connect', this._handleConnect);
-		this.io.on('disconnect', this._handleDisconnect);
+    this.io.on('disconnect', this._handleDisconnect);
+    this.io.on('reconnect_error', this._handleReconnectError);
+    this.io.on('reconnect', this._handleReconnect);
 	}
 
 	unbindDispatchers() {
 		this.io.off('connect', this._handleConnect);
-		this.io.off('disconnect', this._handleDisconnect);
+    this.io.off('disconnect', this._handleDisconnect);
+    this.io.off('reconnect_error', this._handleReconnectError);
+    this.io.off('reconnect', this._handleReconnect);
 	}
 
 	_handleConnect() {
 		this.isConnected = true;
     this.isConnecting = false;
+    this.reconnectError = null;
     this.callStateHandler();
-	}
+  }
+
+  _handleReconnect() {
+    this.isConnected = false;
+    this.isConnecting = true;
+    this.reconnectError = null;
+    this.callStateHandler();
+  }
 
 	_handleDisconnect() {
 		this.isConnected = false;
     this.isConnecting = true; // because socket.io have auto-reconnect delay
     this.callStateHandler();
-	}
+  }
+
+  _handleReconnectError(err) {
+    this.reconnectError = err;
+    this.callStateHandler();
+  }
 
 	disconnect() {
 		if (this.io === undefined) {
