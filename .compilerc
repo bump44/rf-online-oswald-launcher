@@ -7,7 +7,7 @@
             "env",
             {
               "targets": {
-                "electron": "2.0.4"
+                "electron": "2.0"
               }
             }
           ],
@@ -15,7 +15,9 @@
           "stage-0"
         ],
         "plugins": [
-          "transform-async-to-generator"
+          "transform-async-to-generator",
+          "styled-components",
+          "react-hot-loader/babel"
         ],
         "sourceMaps": "inline"
       }
@@ -27,7 +29,7 @@
             "env",
             {
               "targets": {
-                "electron": "2.0.4"
+                "electron": "2.0"
               }
             }
           ],
@@ -35,7 +37,12 @@
           "stage-0"
         ],
         "plugins": [
-          "transform-async-to-generator"
+          "transform-react-constant-elements",
+          "transform-react-pure-class-to-function",
+          "transform-react-remove-prop-types",
+          "transform-react-inline-elements",
+          "transform-async-to-generator",
+          "styled-components"
         ],
         "sourceMaps": "none"
       }

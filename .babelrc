@@ -2,21 +2,18 @@
   "presets": [
     ["env", {
       "targets": { "node": 8 },
-      "useBuiltIns": true
+      "useBuiltIns": true,
+      "modules": false
     }],
-    "stage-0",
-    "react"
+    "react",
+    "stage-0"
   ],
-  "plugins": ["add-module-exports"],
+  "plugins": ["styled-components"],
   "env": {
-    "production": {
-      "presets": ["react-optimize"],
-      "plugins": ["dev-expression"]
-    },
-    "development": {
+    "test": {
       "plugins": [
-        "transform-class-properties",
-        "transform-es2015-classes"
+        "transform-es2015-modules-commonjs",
+        "dynamic-import-node"
       ]
     }
   }
