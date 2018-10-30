@@ -124,7 +124,7 @@ export default class UserAccountCard extends React.PureComponent {
           &nbsp;
           <AccountMetadataValue>
             {account.firstLoginAt
-              ? moment(account.lastLoginAt).format('LLLL')
+              ? moment(account.firstLoginAt).format('LLLL')
               : '—'}
             &nbsp;
             {account.firstLoginIp ? `(${account.firstLoginIp})` : ''}
