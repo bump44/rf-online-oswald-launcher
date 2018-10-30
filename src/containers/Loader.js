@@ -963,7 +963,7 @@ class Loader extends React.Component {
                 }
               }
               if (current && current.path) {
-                await unlink(current.path);
+                await unlink(gameClientPath(current.path));
                 if (nextHashMap[current.md5] !== undefined) {
                   delete nextHashMap[current.md5];
                 }
