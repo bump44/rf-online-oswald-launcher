@@ -72,7 +72,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "electron-forge": "^5.2.2",
+    "electron-forge": "^5.2.3",
     "electron-prebuilt-compile": "2.0.4",
     "eslint": "^5.9.0",
     "eslint-config-airbnb": "^17.1.0",
