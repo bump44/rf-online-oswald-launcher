@@ -74,7 +74,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "electron-forge": "^5.2.3",
     "electron-prebuilt-compile": "3.0.13",
-    "eslint": "^5.11.0",
+    "eslint": "^5.13.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-import": "^2.14.0",
