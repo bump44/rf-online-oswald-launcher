@@ -54,7 +54,7 @@
     "notie": "^4.3.1",
     "react": "^16.7.0",
     "react-custom-scrollbars": "^4.2.1",
-    "react-dom": "^16.7.0",
+    "react-dom": "^16.8.5",
     "react-pose": "^4.0.8",
     "recursive-readdir": "^2.2.2",
     "request": "^2.88.0",
