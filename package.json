@@ -52,7 +52,7 @@
     "md5-file": "^4.0.0",
     "moment": "^2.23.0",
     "notie": "^4.3.1",
-    "react": "^16.7.0",
+    "react": "^16.8.6",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.7.0",
     "react-pose": "^4.0.8",
