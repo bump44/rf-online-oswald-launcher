@@ -149,7 +149,7 @@ class Loader extends React.Component {
     let lsStateUser = {
       obj: null,
       jwt: '', // last used
-      audioPlayOnStart: true,
+      audioPlayOnStart: false,
       selected: null,
     };
 
