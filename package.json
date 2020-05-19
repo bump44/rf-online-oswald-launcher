@@ -47,7 +47,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "extract-zip": "^1.6.7",
     "font-awesome": "^4.7.0",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.15",
     "md5": "^2.2.1",
     "md5-file": "^4.0.0",
     "moment": "^2.22.2",
